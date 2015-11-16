@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+
+## Level Intros - part of the Penuine game engine
+# Functionality not certain
+# Copyright ExeSoft 2007
+#
+# Update history:
+# Created - Monday 17th December 2007, by David Barker
+# Consigned to the bit-bucket - Tuesday 29th January 2007, by David Barker
+#               Reason: Faded wipe effect is impossible, and a wipe alone looks terrible. Fade alone
+#               is impossible whilst the text box itself has transparency.
+
+
+import pygame, sys
+from fading import *
+
+
+class Intro():
+    def __init__(self, levelnumber, title, text):
+        self.levelnumber, self.title, self.text = levelnumber, title, text
+        self.screen = pygame.display.get_surface()
+        self.clock = pygame.time.Clock()
+        self.mainfont = pygame.font.Font("Data\\LithosPro-Black.otf", 40)
+        self.running = True
+        self.count = 12
+        # The first clouds layer
+        self.clouds1a = pygame.image.load("Data\\mainmenu\\clouds1.png")
+        self.clouds1arect = self.clouds1a.get_rect()
+        self.clouds1b = pygame.image.load("Data\\mainmenu\\clouds1.png")
+        self.clouds1brect = self.clouds1b.get_rect()
+        self.clouds1brect.x = -600
+        # The second clouds layer
+        self.clouds2a = pygame.image.load("Data\\mainmenu\\clouds2.png")
+        self.clouds2arect = self.clouds2a.get_rect()
+        self.clouds2b = pygame.image.load("Data\\mainmenu\\clouds2.png")
+        self.clouds2brect = self.clouds2b.get_rect()
+        self.clouds2brect.x = 600
+        # The third clouds layer
+        self.clouds3a = pygame.image.load("Data\\mainmenu\\clouds3.png")
+        self.clouds3arect = self.clouds3a.get_rect()
+        self.clouds3b = pygame.image.load("Data\\mainmenu\\clouds3.png")
+        self.clouds3brect = self.clouds3b.get_rect()
+        self.clouds3brect.x = -600
+        # The text box images
+        self.tlcorner = pygame.image.load("Data\\intros\\topleft.png").convert_alpha()
+        self.trcorner = pygame.image.load("Data\\intros\\topright.png").convert_alpha()
+        self.bannertile = pygame.image.load("Data\\intros\\banner.png").convert_alpha()
+        self.tile = pygame.image.load("Data\\intros\\tile.png").convert_alpha()
+
+    def ShowIntro(self):
+        # Draw the screen
+        self.AnimateClouds()
+        self.DrawBox((400, 300))
+        self.Redraw()
+        self.fader = Fader(self)
+        self.fader.FadeIn(60)
+        while self.running == True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+            self.Redraw()
+            pygame.display.update()
+            self.clock.tick(60)
+
+    def Redraw(self):
+        """
+    Redraw the screen and everything on it.
+        """
+        # Animate the cloud positions
+        self.AnimateClouds()
+        # Update the text box
+        self.UpdateBox()
+        # Fill the screen with the background colour
+        self.screen.fill((180,249,255))
+        # Blit in the first cloud layer
+        self.screen.blit(self.clouds1a, self.clouds1arect)
+        self.screen.blit(self.clouds1b, self.clouds1brect)
+        # Blit the second clouds layer
+        self.screen.blit(self.clouds2a, self.clouds2arect)
+        self.screen.blit(self.clouds2b, self.clouds2brect)
+        # Blit the third clouds layer
+        self.screen.blit(self.clouds3a, self.clouds3arect)
+        self.screen.blit(self.clouds3b, self.clouds3brect)
+        # Blit the text box
+        self.screen.blit(self.box, self.boxrect)
+
+    def DrawBox(self, size):
+        self.box = pygame.Surface(size, pygame.SRCALPHA, 32)
+        self.boxrect = self.box.get_rect()
+        self.boxrect.width = size[0]
+        self.boxrect.height = size[1]
+        self.boxrect.x = 300-(self.boxrect.width/2)
+        self.boxrect.y = 240-(self.boxrect.height/2)
+        self.tlcorner.set_alpha(20)
+        self.box.blit(self.tlcorner, (0,0))
+        self.box.blit(self.trcorner, ((self.boxrect.width-self.trcorner.get_rect().width), 0))
+        for column in range (24, (self.boxrect.width-self.trcorner.get_rect().width)):
+            self.box.blit(self.bannertile, (column, 0))
+        #self.box.set_alpha(0)
+        
+    def UpdateBox(self):
+        if self.count*2<self.boxrect.height:
+            for column in range(0, self.boxrect.width):
+                self.box.blit(self.tile, (column, self.count*2))
+            #stepcount = ((self.boxrect.height-24)/2)
+            #jump = 255.0/float(stepcount)
+            #currentanimframe = self.count-12
+            #self.box.set_alpha(jump*currentanimframe)
+            self.count = self.count+1
+
+    def AnimateClouds(self):
+        """
+    Animates the positions of the cloud layers.
+        """
+        # The first clouds layer
+        if self.clouds1arect.x == 600:
+            self.clouds1arect.x = -600
+            self.clouds1brect.x = 0
+        elif self.clouds1brect.x == 600:
+            self.clouds1brect.x = -600
+            self.clouds1arect.x = 0
+        else:
+            self.clouds1arect.x = self.clouds1arect.x+1
+            self.clouds1brect.x = self.clouds1brect.x+1
+        # The second clouds layer
+        if self.clouds2arect.x == -600:
+            self.clouds2arect.x = 600
+            self.clouds2brect.x = 0
+        elif self.clouds2brect.x == -600:
+            self.clouds2brect.x = 600
+            self.clouds2arect.x = 0
+        else:
+            self.clouds2arect.x = self.clouds2arect.x-2
+            self.clouds2brect.x = self.clouds2brect.x-2
+        # The third clouds layer
+        if self.clouds3arect.x == 600:
+            self.clouds3arect.x = -600
+            self.clouds3brect.x = 0
+        elif self.clouds3brect.x == 600:
+            self.clouds3brect.x = -600
+            self.clouds3arect.x = 0
+        else:
+            self.clouds3arect.x = self.clouds3arect.x+4
+            self.clouds3brect.x = self.clouds3brect.x+4
+
+    def UpdateScreen(self):
+        self.Redraw()

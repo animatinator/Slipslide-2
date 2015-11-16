@@ -1,0 +1,12 @@
+----- OLD SYSTEM -----
+0 = Empty space
+1 = Block
+2 = Character start point
+
+----- NEW SYSTEM -----
+0 = Empty space
+B = Block
+W = Wall
+S = Character start point
+H = Hole
+F = Finish

@@ -1,0 +1,25 @@
+Current version = 0.67
+
+0.65 - Slipinator mostly complete, game engine effectively complete
+
+From then onwards:
+
+LEVELINTROS - total 0.02
+
+SLIPINATOR COMPLETE - total 0.03
+
+LEVELS - total 0.25
+Each finished level is worth another 0.01. The level progress breaks
+down as follows:
+Background = 0.004
+Layout = 0.004
+Other graphics (block and hole) = 0.002
+
+MUSIC - total 0.02
+Each finished piece of music is worth 0.02. WIP music can be judged
+on its nearness to completion (or just valued as 0.01 for simplicity).
+
+TESTING AND FINAL ADDITIONS - total 0.3
+At this stage beta testing will begin, and the compiling script should
+be written. Values added in this period should be based on nearness
+to completion.

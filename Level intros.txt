@@ -1,0 +1,9 @@
+Size should be 480*384; 80% of the full screen size. The
+background is animated clouds, with the text window being
+slightly transparent (lines alternating between near-opaque
+and near-invisible blues in the style of Pash's pause menu).
+The text window is made up of five pieces: the four corners,
+and a 1*2 pixel piece which is tiled across the remaining
+size of the window. The topmost pixel of this is the standard
+blue with 80% opacity, the bottom is the same but with 40%
+opacity.
